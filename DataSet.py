@@ -4,16 +4,17 @@ from torch.utils import data
 from torchvision import transforms
 import PIL
 import multiprocessing
+import librosa
 ####INPUTS To Change####
-trainPath = 'nsynth-test2/audio/'
-testPath = 'nsynth-test2/audio/'
+trainPath = 'nsynth-valid/audio/'
+testPath = 'nsynth-test/audio/'
 ####
 class Dataset(data.Dataset):
     def __init__(self, path, transform):
         self.ids = []
         self.path = path
         self.transform = transform
-        for f in os.listdir(path):            
+        for f in os.listdir(path):
             if not f.startswith('.'):
                 self.ids.append(f)
     def __len__(self):
