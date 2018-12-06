@@ -16,6 +16,6 @@ class Dataset(data.Dataset):
         X = librosa.feature.melspectrogram(y=y, sr=sr)
         if self.transform:
             X = self.transform(X)
-        label = self.ids[index].split("_")[0:2]
+        label = ' '.join(self.ids[index].split("_")[0:2])
         return X, label
         
