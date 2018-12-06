@@ -1,4 +1,6 @@
 import time
+import torch
+
 def train(model, device, train_loader, optimizer, epoch, log_interval):
     model.train()
     for batch_idx, (data, label) in enumerate(train_loader):
