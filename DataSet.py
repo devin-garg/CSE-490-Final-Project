@@ -4,7 +4,7 @@ from torch.utils import data
 class Dataset(data.Dataset):
     def __init__(self, path, transform):
         self.ids = []
-        self.label = path
+        self.path = path
         self.transform = transform
         for f in os.listdir(path):            
             if not f.startswith('.'):
@@ -12,10 +12,10 @@ class Dataset(data.Dataset):
     def __len__(self):
         return len(self.ids)
     def __getitem__(self, index):
-        y, sr = librosa.load(label + "/" + self.ids[index])
+        y, sr = librosa.load(self.path + "/" + self.ids[index])
         X = librosa.feature.melspectrogram(y=y, sr=sr)
-        if self.transform is not None:
+        if self.transform:
             X = self.transform(X)
-        label = self.label
+        label = self.ids[index].split("_")[0:2]
         return X, label
         
