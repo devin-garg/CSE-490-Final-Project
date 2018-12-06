@@ -1,6 +1,7 @@
 import torch
 import os
 from torch.utils import data
+import PIL
 class Dataset(data.Dataset):
     def __init__(self, path, transform):
         self.ids = []
@@ -14,6 +15,7 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
         y, sr = librosa.load(self.path + "/" + self.ids[index])
         X = librosa.feature.melspectrogram(y=y, sr=sr)
+        X = PIL.Image.fromarray(X)
         if self.transform:
             X = self.transform(X)
         label = ' '.join(self.ids[index].split("_")[0:2])
