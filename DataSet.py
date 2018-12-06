@@ -5,10 +5,12 @@ from torchvision import transforms
 import PIL
 import multiprocessing
 import librosa
+import numpy as np
 ####INPUTS To Change####
 trainPath = 'nsynth-valid/audio/'
 testPath = 'nsynth-test/audio/'
 ####
+
 class Dataset(data.Dataset):
     def __init__(self, path, transform):
         self.ids = []
@@ -22,8 +24,12 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
         y, sr = librosa.load(self.path + self.ids[index])
         X = librosa.feature.melspectrogram(y=y, sr=sr)
+        X = X/np.max(X)*255
+        X = np.expand_dims(X, axis=-1).astype(np.float32)
+        print(X.shape)
         if self.transform:
             X = self.transform(X)
+
         label = ' '.join(self.ids[index].split("_")[0:2])
         return X, label
 train_transforms = transforms.Compose([
