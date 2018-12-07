@@ -33,6 +33,11 @@ def test(model, device, test_loader, return_images=False, log_interval=None):
     gt_values = []
     with torch.no_grad():
         for batch_idx, (data, label) in enumerate(test_loader):
+            print("data")
+            print(data)
+            print(data.to(device))
+            print("label\n")
+            print(label)
             data, label = data.to(device), label.to(device)
             output = model(data)
             test_loss_on = model.loss(output, label, reduction='sum').item()

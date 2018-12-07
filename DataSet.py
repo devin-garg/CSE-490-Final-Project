@@ -16,6 +16,7 @@ class Dataset(data.Dataset):
         self.ids = []
         self.path = path
         self.transform = transform
+        self.labelDict = {'keyboard electronic': 0, 'flute synthetic': 1, 'organ electronic': 2, 'keyboard synthetic': 3, 'bass synthetic': 4, 'string acoustic': 5, 'mallet acoustic': 6, 'guitar acoustic': 7, 'guitar electronic': 8, 'brass acoustic': 9, 'reed acoustic': 10, 'bass electronic': 11, 'vocal synthetic': 12, 'keyboard acoustic': 13, 'vocal acoustic': 14, 'flute acoustic': 15}
         for f in os.listdir(path):
             if not f.startswith('.'):
                 self.ids.append(f)
@@ -24,14 +25,17 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
         y, sr = librosa.load(self.path + self.ids[index])
         X = librosa.feature.melspectrogram(y=y, sr=sr)
+        #print(X.shape)
         X = X/np.max(X)*255
+        #print(X.shape)
         X = np.expand_dims(X, axis=-1).astype(np.float32)
-        print(X.shape)
+        #print(X.shape)
         if self.transform:
             X = self.transform(X)
 
         label = ' '.join(self.ids[index].split("_")[0:2])
-        return X, label
+        label = self.labelDict[label]
+        return (X, label)
 train_transforms = transforms.Compose([
     transforms.ToPILImage(),
     transforms.Resize([128,128]),
